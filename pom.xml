@@ -57,7 +57,7 @@
 						<index>true</index>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>hadoopInstaller.Main</mainClass>
+							<mainClass>netperf.controller.NetPerfServerStarter</mainClass>
 						</manifest>
 					</archive>
 					<useDefaultManifestFile>true</useDefaultManifestFile>
