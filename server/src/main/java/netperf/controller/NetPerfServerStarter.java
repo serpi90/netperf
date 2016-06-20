@@ -1,4 +1,4 @@
-package netperf.server;
+package netperf.controller;
 
 /*
  * #%L
@@ -26,6 +26,7 @@ package netperf.server;
  * #L%
  */
 
+import netperf.server.NetPerfServer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.SimpleLog;

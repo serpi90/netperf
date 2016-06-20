@@ -33,6 +33,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.impl.SimpleLog;
+
 import netperf.protocol.DisconnectMessage;
 import netperf.protocol.MessageMarshaller;
 import netperf.protocol.SpeedMeasurement;
@@ -40,8 +42,6 @@ import netperf.protocol.StartMessage;
 import netperf.protocol.TransferCommand;
 import netperf.protocol.TransferDuringFixedTime;
 import netperf.protocol.TransferWithFixedSize;
-
-import org.apache.commons.logging.impl.SimpleLog;
 
 @SuppressWarnings("javadoc")
 public class Controller {
@@ -72,8 +72,7 @@ public class Controller {
 				long kilobytes = 1024 * 1024 * 1;
 				log.info("Requesting transfer of " + kilobytes + " kb");
 				TransferCommand command = new TransferWithFixedSize(kilobytes);
-				os.write(marshaller.marshallMessage(new StartMessage(addresses,
-						command)));
+				os.write(marshaller.marshallMessage(new StartMessage(addresses, command)));
 				log.info("Awaiting speed count");
 				SpeedMeasurement[] speeds = marshaller.unmarshallSpeeds(is);
 				log.info("Got " + speeds.length + " speeds");
@@ -85,10 +84,8 @@ public class Controller {
 				log.info("++++ Time ++++");
 				long milliseconds = 1000 * 1;
 				log.info("Requesting transfer during " + milliseconds + " ms");
-				TransferCommand command = new TransferDuringFixedTime(
-						milliseconds);
-				os.write(marshaller.marshallMessage(new StartMessage(addresses,
-						command)));
+				TransferCommand command = new TransferDuringFixedTime(milliseconds);
+				os.write(marshaller.marshallMessage(new StartMessage(addresses, command)));
 
 				log.info("Awaiting speed count");
 				SpeedMeasurement[] speeds = marshaller.unmarshallSpeeds(is);

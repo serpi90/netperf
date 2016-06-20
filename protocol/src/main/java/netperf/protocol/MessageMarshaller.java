@@ -35,11 +35,11 @@ import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
 
-
 /**
  * @author Julián Maestri <serpi90@gmail.com> Writes / Reads objects from the
  *         network.
  */
+@SuppressWarnings("javadoc")
 public class MessageMarshaller {
 
 	public class MarshalException extends Exception {
@@ -72,11 +72,9 @@ public class MessageMarshaller {
 	 * @return Integer read from the inputStream
 	 * @throws IOException
 	 */
-	private static int readMessageSize(InputStream inputStream)
-			throws IOException {
+	private static int readMessageSize(InputStream inputStream) throws IOException {
 		byte[] bytes = new byte[LENGTH_HEADER_SIZE];
-		for (int read = 0; read < bytes.length; read += inputStream.read(bytes,
-				read, bytes.length - read))
+		for (int read = 0; read < bytes.length; read += inputStream.read(bytes, read, bytes.length - read))
 			;
 		return bytesToInt(bytes);
 	}
@@ -91,8 +89,7 @@ public class MessageMarshaller {
 		try {
 			int size = readMessageSize(inputStream);
 			byte[] raw = new byte[size];
-			for (int read = 0; read < raw.length; read += inputStream.read(raw,
-					read, raw.length - read))
+			for (int read = 0; read < raw.length; read += inputStream.read(raw, read, raw.length - read))
 				;
 			return raw;
 		} catch (IOException e) {
@@ -109,8 +106,7 @@ public class MessageMarshaller {
 			 * The address varies in ipv4/ipv6, so we put the address length
 			 * before each address.
 			 */
-			length += LENGTH_HEADER_SIZE
-					+ address.getAddress().getAddress().length + Short.SIZE / 8;
+			length += LENGTH_HEADER_SIZE + address.getAddress().getAddress().length + Short.SIZE / 8;
 		}
 		ByteBuffer buffer = ByteBuffer.allocate(length + LENGTH_HEADER_SIZE);
 		buffer.putInt(addresses.size());
@@ -123,8 +119,15 @@ public class MessageMarshaller {
 		return buffer.array();
 	}
 
-	private byte[] marshallMeasurementMessage(MeasurementMessage message)
-			throws MarshalException {
+	private byte[] marshallDisconnectMessage(DisconnectMessage message) {
+		int length = 1;
+		ByteBuffer buffer = ByteBuffer.allocate(LENGTH_HEADER_SIZE + length);
+		buffer.putInt(1);
+		buffer.put(DISCONNECT_MESSAGE);
+		return buffer.array();
+	}
+
+	private byte[] marshallMeasurementMessage(MeasurementMessage message) throws MarshalException {
 		byte[] commandBytes = marshallTransferCommand(message.getCommand());
 		int length = 1 + commandBytes.length;
 		ByteBuffer buffer = ByteBuffer.allocate(LENGTH_HEADER_SIZE + length);
@@ -181,8 +184,7 @@ public class MessageMarshaller {
 		return buffer.array();
 	}
 
-	private byte[] marshallStartMessage(StartMessage message)
-			throws MarshalException {
+	private byte[] marshallStartMessage(StartMessage message) throws MarshalException {
 		byte[] commandBytes = marshallTransferCommand(message.getCommand());
 		byte[] addressBytes = marshallAddresses(message.getAddresses());
 		int length = 1 + commandBytes.length + addressBytes.length;
@@ -194,14 +196,6 @@ public class MessageMarshaller {
 		return buffer.array();
 	}
 
-	private byte[] marshallDisconnectMessage(DisconnectMessage message) {
-		int length = 1;
-		ByteBuffer buffer = ByteBuffer.allocate(LENGTH_HEADER_SIZE + length);
-		buffer.putInt(1);
-		buffer.put(DISCONNECT_MESSAGE);
-		return buffer.array();
-	}
-
 	private byte[] marshallStopMessage(StopMessage message) {
 		int length = 1;
 		ByteBuffer buffer = ByteBuffer.allocate(LENGTH_HEADER_SIZE + length);
@@ -210,28 +204,24 @@ public class MessageMarshaller {
 		return buffer.array();
 	}
 
-	private byte[] marshallTransferCommand(TransferCommand command)
-			throws MarshalException {
+	private byte[] marshallTransferCommand(TransferCommand command) throws MarshalException {
 		// No length header is appended because this is currently embedded in
 		// other messages.
 		int length = 1 + Long.SIZE / 8;
 		ByteBuffer buffer = ByteBuffer.allocate(length);
 		if (command instanceof TransferDuringFixedTime) {
 			buffer.put(FIXED_TIME_COMMAND);
-			buffer.putLong(((TransferDuringFixedTime) command)
-					.getMilliseconds());
+			buffer.putLong(((TransferDuringFixedTime) command).getMilliseconds());
 		} else if (command instanceof TransferWithFixedSize) {
 			buffer.put(FIXED_SIZE_COMMAND);
-			buffer.putLong(((TransferWithFixedSize) command)
-					.getKilobytesToSend());
+			buffer.putLong(((TransferWithFixedSize) command).getKilobytesToSend());
 		} else {
 			throw new MarshalException();
 		}
 		return buffer.array();
 	}
 
-	private List<InetSocketAddress> unmarshallAddresses(ByteBuffer buffer)
-			throws MarshalException {
+	private List<InetSocketAddress> unmarshallAddresses(ByteBuffer buffer) throws MarshalException {
 		List<InetSocketAddress> addresses = new LinkedList<>();
 		int total = buffer.getInt();
 		for (int i = 0; i < total; i++) {
@@ -249,8 +239,7 @@ public class MessageMarshaller {
 		return addresses;
 	}
 
-	private Message unmarshallMeasurementMessage(ByteBuffer buffer)
-			throws MarshalException {
+	private Message unmarshallMeasurementMessage(ByteBuffer buffer) throws MarshalException {
 		TransferCommand command = unmarshallTransferCommand(buffer);
 		return new MeasurementMessage(command);
 
@@ -273,8 +262,7 @@ public class MessageMarshaller {
 		}
 	}
 
-	public Message unmarshallMessage(InputStream inputStream)
-			throws MarshalException {
+	public Message unmarshallMessage(InputStream inputStream) throws MarshalException {
 		return unmarshallMessage(readRawBytes(inputStream));
 	}
 
@@ -310,15 +298,13 @@ public class MessageMarshaller {
 		return unmarshallSpeeds(ByteBuffer.wrap(readRawBytes(inputStream)));
 	}
 
-	private Message unmarshallStartMessage(ByteBuffer buffer)
-			throws MarshalException {
+	private Message unmarshallStartMessage(ByteBuffer buffer) throws MarshalException {
 		TransferCommand command = unmarshallTransferCommand(buffer);
 		List<InetSocketAddress> addresses = unmarshallAddresses(buffer);
 		return new StartMessage(addresses, command);
 	}
 
-	private TransferCommand unmarshallTransferCommand(ByteBuffer buffer)
-			throws MarshalException {
+	private TransferCommand unmarshallTransferCommand(ByteBuffer buffer) throws MarshalException {
 		byte commandType = buffer.get();
 		long data = buffer.getLong();
 		switch (commandType) {

@@ -7,9 +7,8 @@
 		<version>1.0</version>
 		<relativePath>..</relativePath>
 	</parent>
-	<artifactId>control</artifactId>
-	<packaging>jar</packaging>
-	<name>Controller</name>
+	<artifactId>stopper</artifactId>
+	<name>Stopper</name>
 	<build>
 		<plugins>
 			<plugin>
@@ -19,7 +18,7 @@
 						<index>true</index>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>netperf.controller.Controller</mainClass>
+							<mainClass>netperf.controller.Stopper</mainClass>
 						</manifest>
 					</archive>
 					<useDefaultManifestFile>true</useDefaultManifestFile>

@@ -61,8 +61,7 @@ public class MeasureSpeed {
 	 * @param log
 	 *            the logger to use
 	 */
-	public MeasureSpeed(InputStream inputStream, OutputStream outputStream,
-			Log log) {
+	public MeasureSpeed(InputStream inputStream, OutputStream outputStream, Log log) {
 		this.inputStream = inputStream;
 		this.outputStream = outputStream;
 		this.log = log;
@@ -82,11 +81,9 @@ public class MeasureSpeed {
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-	public SpeedMeasurement[] executeAsSource(TransferCommand command)
-			throws IOException, MarshalException {
+	public SpeedMeasurement[] executeAsSource(TransferCommand command) throws IOException, MarshalException {
 		SpeedMeasurement[] speeds = new SpeedMeasurement[4];
-		outputStream.write(marshaller.marshallMessage(new MeasurementMessage(
-				command)));
+		outputStream.write(marshaller.marshallMessage(new MeasurementMessage(command)));
 		log.info("Source Sending " + command);
 		speeds[MY_WRITE_SPEED] = command.executeSend(outputStream);
 		log.info("Source Write Speed " + speeds[MY_WRITE_SPEED]);
@@ -135,8 +132,7 @@ public class MeasureSpeed {
 
 	}
 
-	private void sendResponse(OutputStream outputStream, SpeedMeasurement speed)
-			throws IOException {
+	private void sendResponse(OutputStream outputStream, SpeedMeasurement speed) throws IOException {
 		log.debug("Sending Response");
 		outputStream.write(marshaller.marshallSpeed(speed));
 		log.debug("Sent Response");

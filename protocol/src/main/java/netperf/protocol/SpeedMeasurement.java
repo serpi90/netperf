@@ -84,8 +84,8 @@ public class SpeedMeasurement {
 	@Override
 	public String toString() {
 		try (Formatter formatter = new Formatter()) {
-			return formatter.format("%.2f kb/s (%d kb / %d ms)", getSpeed(),
-					getKilobytes(), getEnd() - getStart()).toString();
+			return formatter.format("%.2f kb/s (%d kb / %d ms)", getSpeed(), getKilobytes(), getEnd() - getStart())
+					.toString();
 		}
 	}
 }

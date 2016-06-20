@@ -37,6 +37,13 @@ public interface MessageVisitor {
 	/**
 	 * See visitor pattern
 	 * 
+	 * @param disconnectMessage
+	 */
+	void acceptDisconnectMessage(DisconnectMessage disconnectMessage);
+
+	/**
+	 * See visitor pattern
+	 * 
 	 * @param dataMessage
 	 */
 	void acceptMeasurementMessage(MeasurementMessage dataMessage);
@@ -54,12 +61,5 @@ public interface MessageVisitor {
 	 * @param stopMessage
 	 */
 	void acceptStopMessage(StopMessage stopMessage);
-
-	/**
-	 * See visitor pattern
-	 * 
-	 * @param disconnectMessage
-	 */
-	void acceptDisconnectMessage(DisconnectMessage disconnectMessage);
 
 }

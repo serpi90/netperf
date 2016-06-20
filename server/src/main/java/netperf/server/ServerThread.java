@@ -86,16 +86,27 @@ public class ServerThread extends Thread implements MessageVisitor {
 	}
 
 	@Override
-	public void acceptMeasurementMessage(MeasurementMessage dataMessage) {
-		server.getLog().info(
-				"Received: " + dataMessage + " from: "
-						+ listeningSocket.getRemoteSocketAddress().toString());
+	public void acceptDisconnectMessage(DisconnectMessage disconnectMessage) {
 		try {
-			new MeasureSpeed(inputStream, outputStream, server.getLog())
-					.executeAsTarget(dataMessage.getCommand());
+			server.getLog().info("Closing connection from" + listeningSocket.getRemoteSocketAddress());
+			listeningSocket.close();
+			server.getLog().info("Closed connection from" + listeningSocket.getRemoteSocketAddress());
+
 		} catch (IOException e) {
-			server.getLog().error(
-					"Error executing MeasureSpeedCommand asTarget", e);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void acceptMeasurementMessage(MeasurementMessage dataMessage) {
+		server.getLog()
+				.info("Received: " + dataMessage + " from: " + listeningSocket.getRemoteSocketAddress().toString());
+		try {
+			new MeasureSpeed(inputStream, outputStream, server.getLog()).executeAsTarget(dataMessage.getCommand());
+		} catch (IOException e) {
+			server.getLog().error("Error executing MeasureSpeedCommand asTarget", e);
 			System.exit(-1);
 		}
 	}
@@ -110,21 +121,16 @@ public class ServerThread extends Thread implements MessageVisitor {
 				public void run() {
 					try (Socket socket = new Socket()) {
 						socket.connect(address);
-						server.getLog().info(
-								"Incomming connection from" + address
-										+ " port: " + socket.getLocalPort());
+						server.getLog().info("Incomming connection from" + address + " port: " + socket.getLocalPort());
 						OutputStream outputStream = socket.getOutputStream();
 						InputStream inputStream = socket.getInputStream();
-						SpeedMeasurement[] measurement = new MeasureSpeed(
-								inputStream, outputStream, server.getLog())
+						SpeedMeasurement[] measurement = new MeasureSpeed(inputStream, outputStream, server.getLog())
 								.executeAsSource(startMessage.getCommand());
-						outputStream.write(marshaller
-								.marshallMessage(new DisconnectMessage()));
+						outputStream.write(marshaller.marshallMessage(new DisconnectMessage()));
 						socket.close();
 						respond(measurement);
 					} catch (MarshalException | IOException e) {
-						server.getLog().error(
-								"Error executing MeasureSpeed asSource", e);
+						server.getLog().error("Error executing MeasureSpeed asSource", e);
 						System.exit(-1);
 					}
 				}
@@ -161,8 +167,7 @@ public class ServerThread extends Thread implements MessageVisitor {
 	 *            {@link MeasureSpeed#MY_WRITE_SPEED}
 	 * @throws IOException
 	 */
-	public synchronized void respond(SpeedMeasurement[] speeds)
-			throws IOException {
+	public synchronized void respond(SpeedMeasurement[] speeds) throws IOException {
 		server.getLog().info("Sending " + speeds.length + " speeds back");
 		outputStream.write(marshaller.marshallSpeeds(speeds));
 		server.getLog().info("Sent back " + speeds.length + " speeds");
@@ -179,23 +184,5 @@ public class ServerThread extends Thread implements MessageVisitor {
 				server.getLog().error("Error reading message", e);
 			}
 		}
-	}
-
-	@Override
-	public void acceptDisconnectMessage(DisconnectMessage disconnectMessage) {
-		try {
-			server.getLog().info(
-					"Closing connection from"
-							+ listeningSocket.getRemoteSocketAddress());
-			listeningSocket.close();
-			server.getLog().info(
-					"Closed connection from"
-							+ listeningSocket.getRemoteSocketAddress());
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 }

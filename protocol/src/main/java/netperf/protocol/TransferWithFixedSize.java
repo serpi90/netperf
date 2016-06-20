@@ -60,8 +60,7 @@ public class TransferWithFixedSize extends TransferCommand {
 		for (long i = kilobytesToSend; i > 0; i = i - 1) {
 			readKilobyte(input, kilobyte);
 		}
-		return new SpeedMeasurement(start, System.currentTimeMillis(),
-				kilobytesToSend);
+		return new SpeedMeasurement(start, System.currentTimeMillis(), kilobytesToSend);
 	}
 
 	@Override
@@ -70,10 +69,13 @@ public class TransferWithFixedSize extends TransferCommand {
 		for (long i = kilobytesToSend; i > 0; i = i - 1) {
 			sendKilobyte(output, this.kilobyte);
 		}
-		return new SpeedMeasurement(start, System.currentTimeMillis(),
-				kilobytesToSend);
+		return new SpeedMeasurement(start, System.currentTimeMillis(), kilobytesToSend);
 	}
 
+	/**
+	 * @return amount of data in kilobytes to send during
+	 *         {@link #executeSend(OutputStream)}
+	 */
 	public long getKilobytesToSend() {
 		return kilobytesToSend;
 	}

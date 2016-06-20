@@ -48,8 +48,7 @@ public abstract class TransferCommand {
 	 * @return the speed in which the required kilobytes were read
 	 * @throws IOException
 	 */
-	public abstract SpeedMeasurement executeRead(InputStream out)
-			throws IOException;
+	public abstract SpeedMeasurement executeRead(InputStream out) throws IOException;
 
 	/**
 	 * Write the required kilobytes
@@ -59,8 +58,7 @@ public abstract class TransferCommand {
 	 * @return the speed in which the required kilobytes were written
 	 * @throws IOException
 	 */
-	public abstract SpeedMeasurement executeSend(OutputStream out)
-			throws IOException;
+	public abstract SpeedMeasurement executeSend(OutputStream out) throws IOException;
 
 	/**
 	 * Read a single kilobyte and return it
@@ -69,8 +67,7 @@ public abstract class TransferCommand {
 	 * @return
 	 * @throws IOException
 	 */
-	protected byte[] readKilobyte(InputStream input, byte[] buffer)
-			throws IOException {
+	protected byte[] readKilobyte(InputStream input, byte[] buffer) throws IOException {
 		int read = 0;
 		while (read < buffer.length) {
 			read += input.read(buffer, read, buffer.length - read);
@@ -85,8 +82,7 @@ public abstract class TransferCommand {
 	 * @param kilobyte
 	 * @throws IOException
 	 */
-	protected void sendKilobyte(OutputStream output, byte[] kilobyte)
-			throws IOException {
+	protected void sendKilobyte(OutputStream output, byte[] kilobyte) throws IOException {
 		output.write(kilobyte, 0, kilobyte.length);
 	}
 }

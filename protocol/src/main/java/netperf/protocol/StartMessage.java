@@ -45,8 +45,7 @@ public class StartMessage implements Message {
 	 * @param command
 	 *            the command to use during measurement
 	 */
-	public StartMessage(List<InetSocketAddress> addresses,
-			TransferCommand command) {
+	public StartMessage(List<InetSocketAddress> addresses, TransferCommand command) {
 		this.addresses = addresses;
 		this.command = command;
 	}

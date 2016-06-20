@@ -86,6 +86,10 @@ public class TransferDuringFixedTime extends TransferCommand {
 		return new SpeedMeasurement(start, end, sentKilobytes + 1);
 	}
 
+	/**
+	 * @return duration in milliseconds to send data during
+	 *         {@link #executeSend(OutputStream)}
+	 */
 	public long getMilliseconds() {
 		return milliseconds;
 	}

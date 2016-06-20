@@ -33,19 +33,20 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import netperf.protocol.MeasurementMessage;
 import netperf.protocol.Message;
 import netperf.protocol.MessageMarshaller;
+import netperf.protocol.MessageMarshaller.MarshalException;
 import netperf.protocol.SpeedMeasurement;
 import netperf.protocol.StartMessage;
 import netperf.protocol.StopMessage;
 import netperf.protocol.TransferDuringFixedTime;
 import netperf.protocol.TransferWithFixedSize;
-import netperf.protocol.MessageMarshaller.MarshalException;
 
-import org.junit.Before;
-import org.junit.Test;
-
+@SuppressWarnings("javadoc")
 public class MessageMarshallerTest {
 
 	private MessageMarshaller marshaller;
@@ -64,9 +65,7 @@ public class MessageMarshallerTest {
 		assert (message instanceof MeasurementMessage);
 		MeasurementMessage measurementMessage = (MeasurementMessage) message;
 		assert (measurementMessage.getCommand() instanceof TransferWithFixedSize);
-		assertEquals(
-				((TransferWithFixedSize) measurementMessage.getCommand())
-						.getKilobytesToSend(),
+		assertEquals(((TransferWithFixedSize) measurementMessage.getCommand()).getKilobytesToSend(),
 				command.getKilobytesToSend());
 	}
 
@@ -79,36 +78,36 @@ public class MessageMarshallerTest {
 		assert (message instanceof MeasurementMessage);
 		MeasurementMessage measurementMessage = (MeasurementMessage) message;
 		assert (measurementMessage.getCommand() instanceof TransferDuringFixedTime);
-		assertEquals(
-				((TransferDuringFixedTime) measurementMessage.getCommand())
-						.getMilliseconds(),
+		assertEquals(((TransferDuringFixedTime) measurementMessage.getCommand()).getMilliseconds(),
 				command.getMilliseconds());
 	}
 
 	@Test
 	public void testSpeed() {
-		SpeedMeasurement speed = new SpeedMeasurement(1, 2, 3);
-		byte[] bytes = marshaller.marshallSpeed(speed);
-		speed = marshaller.unmarshallSpeed(new ByteArrayInputStream(bytes));
-		assertEquals(speed.getStart(), 1);
-		assertEquals(speed.getEnd(), 2);
-		assertEquals(speed.getKilobytes(), 3);
+		SpeedMeasurement original = new SpeedMeasurement(1, 2, 3);
+		byte[] bytes = marshaller.marshallSpeed(original);
+		SpeedMeasurement speed = marshaller.unmarshallSpeed(new ByteArrayInputStream(bytes));
+		assertEquals(speed.getStart(), original.getStart());
+		assertEquals(speed.getEnd(), original.getEnd());
+		assertEquals(speed.getKilobytes(), original.getKilobytes());
 	}
 
 	@Test
 	public void testSpeeds() {
 		SpeedMeasurement[] speeds = new SpeedMeasurement[2];
-		speeds[0] = new SpeedMeasurement(1, 2, 3);
-		speeds[1] = new SpeedMeasurement(3, 2, 1);
+		SpeedMeasurement speed0 = new SpeedMeasurement(1, 2, 3);
+		SpeedMeasurement speed1 = new SpeedMeasurement(3, 2, 1);
+		speeds[0] = speed0;
+		speeds[1] = speed1;
 		byte[] bytes = marshaller.marshallSpeeds(speeds);
 		speeds = marshaller.unmarshallSpeeds(new ByteArrayInputStream(bytes));
 		assertEquals(speeds.length, 2);
-		assertEquals(speeds[0].getStart(), 1);
-		assertEquals(speeds[0].getEnd(), 2);
-		assertEquals(speeds[0].getKilobytes(), 3);
-		assertEquals(speeds[1].getStart(), 3);
-		assertEquals(speeds[1].getEnd(), 2);
-		assertEquals(speeds[1].getKilobytes(), 1);
+		assertEquals(speeds[0].getStart(), speed0.getStart());
+		assertEquals(speeds[0].getEnd(), speed0.getEnd());
+		assertEquals(speeds[0].getKilobytes(), speed0.getKilobytes());
+		assertEquals(speeds[1].getStart(), speed1.getStart());
+		assertEquals(speeds[1].getEnd(), speed1.getEnd());
+		assertEquals(speeds[1].getKilobytes(), speed1.getKilobytes());
 	}
 
 	@Test
@@ -129,9 +128,7 @@ public class MessageMarshallerTest {
 		assertEquals(startMessage.getAddresses().get(2), addresses.get(2));
 
 		assert (startMessage.getCommand() instanceof TransferWithFixedSize);
-		assertEquals(
-				((TransferWithFixedSize) startMessage.getCommand())
-						.getKilobytesToSend(),
+		assertEquals(((TransferWithFixedSize) startMessage.getCommand()).getKilobytesToSend(),
 				command.getKilobytesToSend());
 	}
 
@@ -153,9 +150,7 @@ public class MessageMarshallerTest {
 		assertEquals(startMessage.getAddresses().get(2), addresses.get(2));
 
 		assert (startMessage.getCommand() instanceof TransferDuringFixedTime);
-		assertEquals(
-				((TransferDuringFixedTime) startMessage.getCommand())
-						.getMilliseconds(),
+		assertEquals(((TransferDuringFixedTime) startMessage.getCommand()).getMilliseconds(),
 				command.getMilliseconds());
 	}
 
