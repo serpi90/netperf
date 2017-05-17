@@ -8,7 +8,9 @@
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>protocol</artifactId>
+	<packaging>jar</packaging>
 	<name>Protocol</name>
+	<description>Messaging protocol for ${project.name} applications.</description>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

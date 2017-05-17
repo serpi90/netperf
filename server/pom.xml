@@ -10,7 +10,7 @@
 	<artifactId>server</artifactId>
 	<packaging>jar</packaging>
 	<name>Server</name>
-	<description>A tool for measuring bandwith between a set of computers</description>
+	<description>Server for ${project.name}. Servers send messages between each other when instructed by a Control</description>
 	<build>
 		<plugins>
 			<plugin>
@@ -20,16 +20,14 @@
 						<index>true</index>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>netperf.controller.NetPerfServerStarter</mainClass>
+							<mainClass>netperf.controller.Controller</mainClass>
 						</manifest>
 					</archive>
-					<useDefaultManifestFile>true</useDefaultManifestFile>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>1.6</version>
 				<executions>
 					<execution>
 						<phase>package</phase>

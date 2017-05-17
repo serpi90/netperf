@@ -10,6 +10,7 @@
 	<artifactId>control</artifactId>
 	<packaging>jar</packaging>
 	<name>Controller</name>
+	<description>Controls remote ${project.name} Servers, indicating when and how to measure bandwith.</description>
 	<build>
 		<plugins>
 			<plugin>
@@ -22,13 +23,11 @@
 							<mainClass>netperf.controller.Controller</mainClass>
 						</manifest>
 					</archive>
-					<useDefaultManifestFile>true</useDefaultManifestFile>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>1.6</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
